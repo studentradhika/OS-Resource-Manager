@@ -1,0 +1,583 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OSRM | OS Resource Manager</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="logo">▦</div>
+
+            <div>
+                <b>OSRM</b>
+                <small>OS Resource Manager</small>
+            </div>
+        </div>
+
+        <nav>
+
+            <button class="nav active" data-page="overview">
+                ⌂ <span>Overview</span>
+            </button>
+
+            <button class="nav" data-page="cpu">
+                ▦ <span>CPU Scheduling</span>
+            </button>
+
+            <button class="nav" data-page="memory">
+                ▤ <span>Memory Management</span>
+            </button>
+
+            <button class="nav" data-page="deadlock">
+                ⬡ <span>Deadlock</span>
+            </button>
+
+            <button class="nav" data-page="disk">
+                ▤ <span>Disk Scheduling</span>
+            </button>
+
+            <button class="nav" data-page="reports">
+                ▥ <span>Performance Reports</span>
+            </button>
+
+            <!-- NEW HISTORY BUTTON -->
+            <button class="nav" data-page="history">
+                ◷ <span>Performance History</span>
+            </button>
+
+        </nav>
+
+        <div class="side-note">
+
+            <b>Project Capstone</b>
+
+            <p>B.Tech CSE</p>
+
+            <i>
+                Optimize Resources.<br>
+                Enhance Performance.
+            </i>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <!-- HEADER -->
+        <header>
+
+            <div>
+
+                <h1 id="title">System Overview</h1>
+
+                <p id="subtitle">
+                    Analyze scheduling, memory allocation and resource safety
+                </p>
+
+            </div>
+
+            <span class="status">● System Ready</span>
+
+        </header>
+
+
+        <!-- OVERVIEW PAGE -->
+        <section id="overview" class="page">
+
+            <div class="cards">
+
+                <article class="tile">
+
+                    <div class="bubble blue">▦</div>
+
+                    <div>
+                        <b>CPU Scheduling</b>
+                        <p>FCFS · SJF · Round Robin</p>
+                    </div>
+
+                </article>
+
+
+                <article class="tile">
+
+                    <div class="bubble purple">▤</div>
+
+                    <div>
+                        <b>Memory Management</b>
+                        <p>First · Best · Worst Fit</p>
+                    </div>
+
+                </article>
+
+
+                <article class="tile">
+
+                    <div class="bubble green">✓</div>
+
+                    <div>
+                        <b>Deadlock Status</b>
+                        <p><span class="safe">READY TO CHECK</span></p>
+                    </div>
+
+                </article>
+
+
+                <article class="tile">
+
+                    <div class="bubble orange">▤</div>
+
+                    <div>
+                        <b>Disk Scheduling</b>
+                        <p>FCFS · SSTF · SCAN</p>
+                    </div>
+
+                </article>
+
+            </div>
+
+
+            <div class="overview-grid">
+
+                <section class="panel">
+
+                    <h2>Welcome to OS Resource Manager</h2>
+
+                    <p class="muted">
+
+                        A simulation platform to study how an operating
+                        system allocates CPU time, manages memory,
+                        avoids unsafe resource states and schedules
+                        disk requests.
+
+                    </p>
+
+
+                    <div class="quick-grid">
+
+                        <button onclick="showPage('cpu')">
+                            Run CPU Analysis →
+                        </button>
+
+                        <button onclick="showPage('memory')">
+                            Compare Memory →
+                        </button>
+
+                        <button onclick="showPage('deadlock')">
+                            Check Safe State →
+                        </button>
+
+                        <button onclick="showPage('disk')">
+                            Run Disk Analysis →
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <section class="panel">
+
+                    <h2>Project Modules</h2>
+
+                    <ul class="module-list">
+
+                        <li>CPU — FCFS, SJF, Round Robin</li>
+
+                        <li>Memory — First Fit, Best Fit, Worst Fit</li>
+
+                        <li>Deadlock — Banker's Safety Algorithm</li>
+
+                        <li>Disk — FCFS, SSTF, SCAN</li>
+
+                        <li>Reports — Algorithm comparisons</li>
+
+                        <li>History — Saved performance records</li>
+
+                    </ul>
+
+                </section>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- CPU SCHEDULING PAGE -->
+        <section id="cpu" class="page hidden">
+
+            <div class="panel">
+
+                <h2>CPU Scheduling Analysis</h2>
+
+                <p class="muted">
+
+                    Add arrival and burst time for each process.
+                    All three algorithms will be compared.
+
+                </p>
+
+
+                <div id="cpuRows"></div>
+
+
+                <div class="actions">
+
+                    <button class="secondary" onclick="addCpuRow()">
+                        + Add Process
+                    </button>
+
+
+                    <label>
+                        Time Quantum
+
+                        <input
+                            id="quantum"
+                            type="number"
+                            min="1"
+                            value="2"
+                        >
+                    </label>
+
+
+                    <button onclick="runCPU()">
+                        Run CPU Analysis
+                    </button>
+
+                </div>
+
+
+                <div id="cpuResult" class="result"></div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- MEMORY MANAGEMENT PAGE -->
+        <section id="memory" class="page hidden">
+
+            <div class="panel">
+
+                <h2>Memory Allocation</h2>
+
+                <p class="muted">
+
+                    Enter comma-separated block sizes and
+                    process memory requirements in KB.
+
+                </p>
+
+
+                <label>
+
+                    Memory Blocks (KB)
+
+                    <input
+                        id="blocks"
+                        value="100, 500, 200, 300, 600"
+                    >
+
+                </label>
+
+
+                <label>
+
+                    Process Sizes (KB)
+
+                    <input
+                        id="processes"
+                        value="212, 417, 112, 426"
+                    >
+
+                </label>
+
+
+                <button onclick="runMemory()">
+                    Compare Allocation Methods
+                </button>
+
+
+                <div id="memoryResult" class="result"></div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- DEADLOCK PAGE -->
+        <section id="deadlock" class="page hidden">
+
+            <div class="panel">
+
+                <h2>Deadlock Detection — Banker's Safety Check</h2>
+
+                <p class="muted">
+
+                    Enter each matrix row on a new line;
+                    values in a row must be comma-separated.
+
+                </p>
+
+
+                <label>
+
+                    Allocation Matrix
+
+                    <textarea id="allocation">0,1,0
+2,0,0
+3,0,2
+2,1,1
+0,0,2</textarea>
+
+                </label>
+
+
+                <label>
+
+                    Maximum Matrix
+
+                    <textarea id="maximum">7,5,3
+3,2,2
+9,0,2
+2,2,2
+4,3,3</textarea>
+
+                </label>
+
+
+                <label>
+
+                    Available Resources
+
+                    <input
+                        id="available"
+                        value="3,3,2"
+                    >
+
+                </label>
+
+
+                <button onclick="runDeadlock()">
+                    Check Safe State
+                </button>
+
+
+                <div id="deadlockResult" class="result"></div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- DISK SCHEDULING PAGE -->
+        <section id="disk" class="page hidden">
+
+            <div class="panel">
+
+                <h2>Disk Scheduling</h2>
+
+
+                <label>
+
+                    Disk Size (cylinders)
+
+                    <input
+                        id="diskSize"
+                        type="number"
+                        value="200"
+                    >
+
+                </label>
+
+
+                <label>
+
+                    Initial Head Position
+
+                    <input
+                        id="head"
+                        type="number"
+                        value="53"
+                    >
+
+                </label>
+
+
+                <label>
+
+                    Disk Requests
+
+                    <input
+                        id="requests"
+                        value="98, 183, 37, 122, 14, 124, 65, 67"
+                    >
+
+                </label>
+
+
+                <label>
+
+                    SCAN Direction
+
+                    <select id="direction">
+
+                        <option value="right">Right</option>
+
+                        <option value="left">Left</option>
+
+                    </select>
+
+                </label>
+
+
+                <button onclick="runDisk()">
+                    Run Disk Analysis
+                </button>
+
+
+                <div id="diskResult" class="result"></div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- PERFORMANCE REPORTS PAGE -->
+        <section id="reports" class="page hidden">
+
+            <div class="panel">
+
+                <h2>Performance Reports</h2>
+
+                <p class="muted">
+
+                    View algorithm-wise results generated
+                    from your CPU, Memory, Disk and Deadlock modules.
+
+                    Run a module first to generate its report.
+
+                </p>
+
+
+                <div class="report-links">
+
+                    <button onclick="showReport('cpu')">
+                        CPU Comparison
+                    </button>
+
+
+                    <button onclick="showReport('memory')">
+                        Memory Comparison
+                    </button>
+
+
+                    <button onclick="showReport('disk')">
+                        Disk Comparison
+                    </button>
+
+
+                    <button onclick="showReport('deadlock')">
+                        Deadlock Safety Report
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="reportContent"
+                    class="result report-output"
+                >
+
+                    <p class="muted">
+                        Select a report above to view its analysis.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- NEW PERFORMANCE HISTORY PAGE -->
+        <section id="history" class="page hidden">
+
+            <div class="panel">
+
+                <h2>Performance History</h2>
+
+                <p class="muted">
+
+                    View previously saved CPU, Memory, Deadlock
+                    and Disk Scheduling results.
+
+                </p>
+
+
+                <div class="actions">
+
+                    <button onclick="loadHistory()">
+                        Refresh History
+                    </button>
+
+                    <button class="secondary" onclick="exportHistoryCSV()">
+                        Export CSV
+                    </button>
+
+                </div>
+
+
+                <div id="historySummary" class="cards"></div>
+
+
+                <div id="historyResult" class="result">
+
+                    <p class="muted">
+                        Click Refresh History to load saved records.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- FOOTER -->
+        <footer>
+
+            OS Resource Manager · Operating Systems Lab Project
+
+        </footer>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</body>
+
+</html>
